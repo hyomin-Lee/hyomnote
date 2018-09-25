@@ -3,11 +3,22 @@ import sqlite3
 from contextlib import closing
 from flask.cli import with_appcontext
 import hashlib
+from flask_wtf import Form
+from flask_pagedown.fields import PageDownField
+from wtforms.fields import SubmitField
+from flask_pagedown import PageDown
 #conn = sqlite3.connect("note.db")
 #cs = conn.cursor()
 
+
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.secret_key = 'secret_code_hyomin_baobob'
+pagedown = PageDown(app)
+
+class PageDownFormExample(Form):
+    pagedown = PageDownField('asdfasdfasdfasdfasdfadf')
+    submit = SubmitField('Save')
 
 def connect_db():
     return sqlite3.connect("./note.db") 
@@ -27,7 +38,10 @@ def get_db():
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    if session.get('LogFlag') == True:
+        return render_template('session_index.html', name=session.get('UserId'))
+    else:
+        return render_template("index.html")
 
 @app.route('/register_form', methods = ['GET'])
 def register_form():
@@ -65,11 +79,38 @@ def login():
         query = '''select password from account where id=?'''
         db_pw = cs.execute(query,(request.form['id'],)).fetchall()[0][0]
         if db_pw == hashlib.sha256(request.form['pw']).hexdigest():
+            session['LogFlag'] = True
+            query = '''select username from account where id=?'''
+            session['UserId'] = cs.execute(query, (request.form['id'],)).fetchall()[0][0]
             return '''<script>alert('login success!!');location.href="/";</script>'''
         else :
             return '''<script>alert('wrong password!!');location.href="/";</script>'''
 
+@app.route('/logout', methods = ['get'])
+def logout():
+    session['LogFlag'] = False
+    session.pop('UserId', None)
+    return redirect(url_for('index'))
+
+@app.route('/usernote', methods = ['get'])
+def usernote():
+    if session.get('LogFlag') != True:
+        return  '''<script>alert('not allowed! plz retry..');location.href="/";</script>'''
+    else:
+        form = PageDownFormExample()
+        cs = get_db()
+        form.pagedown.data = cs.execute('''select board from account where username=?''',(session.get('UserId'),)).fetchall()[0][0]
+        return render_template('note.html', form=form)
+
+@app.route('/note_submit', methods = ['post'])
+def note_submit():
+    cs = get_db()
+    query = '''update account set board=? where username=?'''
+    cs.execute(query,(request.form['pagedown'], session.get('UserId')))
+    cs.commit()
+    return redirect(url_for('usernote'))
+
 if __name__ in "__main__":
-    app.run(host='0.0.0.0', port=8888)
+    app.run(host='0.0.0.0', port=80)
 
 
