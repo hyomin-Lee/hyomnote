@@ -2,16 +2,52 @@
 <html>
 <head>
 	<title>login</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	<style>
+		h1,hr {
+			text-align: center;
+		}
+		h4 {
+			margin-top: -5px;
+		}
+		.form{
+			margin-left: 5px;
+		}
+		.center{
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			width: 205px;
+			height: 230px;
+			margin: auto;
+		}
+		
+		#submit, #back{
+			margin-top: -25px;
+		}
+		.form-control{
+			margin-bottom: -20px;
+		}
+	</style>
+	
 </head>
 <body>
-	<a href="/">main</a>
-	<h2>Login</h2>
-	<hr>
-	<form method="post" action="login">
-		<input type="text" name="id" placeholder="id">
-		<input type="password" name="pw" placeholder="password">
-		<input type="submit" value="login">
-	</form>	
-		
+	<div class="center">
+		<h1>HyomNote</h1>
+		<hr>
+		<div class="form">
+			<h4>Login</h4>
+			<form method="post" action="login">
+				<input type="text" class="form-control" name="id" placeholder="id" required><br>
+				<input type="password" class="form-control" name="pw" placeholder="password" requierd><br><br>
+				<input type="button" id="back" class="btn btn-info btn-sm" value="back" onclick="location.href='../'">
+				<input type="submit" id="submit" class="btn btn-info btn-sm" value="login">
+			</form>		
+		</div>
+		<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	</div>
 </body>
 </html>

@@ -1,13 +1,54 @@
 <html>
 	<head>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+		<style>
+			.flask-pagedown{
+				float: left;
+				width: 50%;
+			}
+			.flask-pagedown-preview{
+				float: right;
+				width: 49%;
+				border: 1px solid #ced4da;
+			        border-radius: .25rem;
+			    	height: 85%;		
+			}
+			.fixed{
+				position: absolute;
+				left: 0;
+				right: 0;
+				top 0;
+				bottom: 0;
+				margin-left:15px;
+				margin-bottom:50px;
+			}
+			.left{
+				float: left;
+
+			}
+			.right{
+				float: right;
+				width: 49%;
+			}	
+		</style>
 		{{ pagedown.include_pagedown() }}
 	</head>
 	<body>
-		<a href="/">main</a>
     		<form method="POST" action="/note_submit">
-			{{ form.pagedown(only_preview = True) }}
-			{{ form.pagedown(only_input=True,rows=10) }}
-			{{ form.submit }}
+			{{ form.pagedown(only_preview = True) }}	
+			{{ form.pagedown(only_input=True,class="md-textarea form-control" ,style="height: 85%;") }}
+			<div class="left">
+				<pre>>> input</pre>
+			</div>
+			<div class="right">
+				<pre>>> show .md</pre>
+			</div>
+			<div class="fixed">
+				<input type="button" id="index" class="btn btn-info btn-sm" value="main" style="width:50px" onclick="location.href='../'">
+				<input type="submit" id="submit" class="btn btn-info btn-sm" value="save" style="width:50px">
+			</div>
 		</form>
+		<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	</body>
 </html>

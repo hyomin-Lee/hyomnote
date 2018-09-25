@@ -111,6 +111,6 @@ def note_submit():
     return redirect(url_for('usernote'))
 
 if __name__ in "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=8080)
 
 

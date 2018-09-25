@@ -2,12 +2,33 @@
 <html>
 <head>
 	<title>index</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	<style>
+		body{
+			text-align: center;
+		}
+		
+		.center{
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			width: 205px;
+			height: 230px;
+			margin: auto;
+		}
+	</style>
 </head>
 <body>
-	<h1>HyomNote</h1>
-	<hr>
-	<p>Hello, {{ name }}</p>
-	<a href="/usernote">My note</a><br>
-	<a href="/logout">Logout</a><br>
+	<div class="center">
+		<h1>HyomNote</h1>
+		<hr>
+		<p class="text-warning">Hello, {{ name }}</p>
+		<input type="button" class="btn btn-info" value="My note"  style="width:100px" onclick="location.href='/usernote'">
+		<input type="button" class="btn btn-info" value="Logout"  style="width:100px" onclick="location.href='/logout'">
+		<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	</div>
 </body>
 </html>
