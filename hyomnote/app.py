@@ -2,6 +2,7 @@ from flask import *
 import sqlite3
 from contextlib import closing
 from flask.cli import with_appcontext
+import hashlib
 #conn = sqlite3.connect("note.db")
 #cs = conn.cursor()
 
@@ -46,8 +47,9 @@ def register():
         query = '''select id from account where id= :Id'''
         check_id = cs.execute(query,{"Id":request.form['id']}).fetchall()
         if check_id == []:
+            hash_pw = hashlib.sha256(request.form['pw']).hexdigest()
             query = '''INSERT INTO account VALUES (?, ?, ?, ?)'''
-            cs.execute(query, (request.form['username'],request.form['id'],request.form['pw'], ""))
+            cs.execute(query, (request.form['username'],request.form['id'],hash_pw, ""))
             cs.commit()
             return '''<script>alert('success register!');location.href="/";</script>'''
         else:
@@ -62,7 +64,7 @@ def login():
     else:
         query = '''select password from account where id=?'''
         db_pw = cs.execute(query,(request.form['id'],)).fetchall()[0][0]
-        if db_pw == request.form['pw']:
+        if db_pw == hashlib.sha256(request.form['pw']).hexdigest():
             return '''<script>alert('login success!!');location.href="/";</script>'''
         else :
             return '''<script>alert('wrong password!!');location.href="/";</script>'''
